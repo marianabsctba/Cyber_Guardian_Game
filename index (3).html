@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Guardian</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root{
+      --panel:#18254a;
+      --panel2:#121c39;
+      --text:#eff7ff;
+      --muted:#a8bdd7;
+      --cyan:#6fe7ff;
+      --violet:#8f82ff;
+      --pink:#ff73c4;
+      --danger:#ff6b8a;
+      --warn:#ffd166;
+      --ok:#53efb9;
+      --shadow:0 10px 0 rgba(0,0,0,.24);
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:"Trebuchet MS", Verdana, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(143,130,255,.18), transparent 25%),
+        radial-gradient(circle at 88% 8%, rgba(111,231,255,.18), transparent 20%),
+        linear-gradient(180deg,#060b15 0%, #0b1327 45%, #101938 100%);
+      image-rendering: pixelated;
+    }
+
+    body{ padding:20px; }
+    .wrap{ max-width:1280px; margin:0 auto; }
+    .hero{ display:grid; grid-template-columns:1.15fr .85fr; gap:18px; margin-bottom:18px; }
+    .main{ display:grid; grid-template-columns:1fr 340px; gap:18px; align-items:start; }
+    .left-col{ display:flex; flex-direction:column; gap:18px; }
+    .side-stack{ display:flex; flex-direction:column; gap:18px; }
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:4px solid #2c3d76;
+      border-radius:8px;
+      box-shadow:var(--shadow);
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(rgba(255,255,255,.04), rgba(255,255,255,0));
+    }
+
+    .intro{ padding:24px; }
+    .eyebrow{
+      display:inline-block;
+      background:#0e1731;
+      border:3px solid #30447d;
+      color:var(--cyan);
+      padding:6px 10px;
+      border-radius:8px;
+      font-size:.76rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    h1,h2,h3,p{ margin:0; }
+    h1{
+      font-size:clamp(2rem,4vw,3.7rem);
+      line-height:1;
+      margin-bottom:12px;
+      font-weight:900;
+      text-shadow:0 3px 0 rgba(0,0,0,.22);
+    }
+    h2,h3{ text-shadow:0 2px 0 rgba(0,0,0,.18); }
+
+    .intro p{
+      color:var(--muted);
+      line-height:1.65;
+      max-width:64ch;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:8px 12px;
+      font-size:.88rem;
+      font-weight:800;
+    }
+    .dot{ width:12px; height:12px; border-radius:2px; display:inline-block; }
+    .danger{ background:var(--danger); }
+    .warn{ background:var(--warn); }
+    .ok{ background:var(--ok); }
+    .violet{ background:var(--violet); }
+
+    .buttons{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:8px;
+      font-size:.95rem;
+      font-weight:900;
+      box-shadow:0 6px 0 rgba(0,0,0,.25);
+      transition:transform .08s ease;
+    }
+    button:hover{ transform:translateY(-1px); }
+    button:active{ transform:translateY(2px); box-shadow:0 3px 0 rgba(0,0,0,.25); }
+
+    .btn-primary{
+      background:linear-gradient(180deg,#92f4ff,var(--cyan));
+      color:#04111d;
+    }
+    .btn-secondary{
+      background:linear-gradient(180deg,#31457f,#20305f);
+      color:var(--text);
+      border:2px solid #455da1;
+    }
+
+    .name-box{
+      margin-top:16px;
+      display:grid;
+      gap:8px;
+      max-width:340px;
+    }
+
+    .name-box label{
+      font-size:.85rem;
+      color:var(--muted);
+      font-weight:900;
+    }
+
+    .name-box input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:8px;
+      border:3px solid #30447d;
+      background:#0f1833;
+      color:var(--text);
+      outline:none;
+      font-size:.95rem;
+      font-weight:800;
+    }
+
+    .avatar-card{
+      padding:20px;
+      display:grid;
+      place-items:center;
+      min-height:280px;
+    }
+    .pixel-stage{
+      width:100%;
+      min-height:250px;
+      display:grid;
+      place-items:center;
+      position:relative;
+      border:4px solid #2d4277;
+      border-radius:8px;
+      background:
+        linear-gradient(180deg, rgba(143,130,255,.14), rgba(111,231,255,.05)),
+        linear-gradient(180deg, #101733, #111b39);
+      overflow:hidden;
+    }
+    .tag{
+      position:absolute;
+      bottom:12px;
+      left:12px;
+      background:#0d1630;
+      border:3px solid #30447d;
+      padding:6px 10px;
+      border-radius:8px;
+      font-weight:900;
+      color:var(--muted);
+      font-size:.82rem;
+    }
+
+    .pixel-sprite{
+      width:176px;
+      height:176px;
+      image-rendering:pixelated;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+      padding:14px;
+      margin-bottom:18px;
+    }
+    .stat{
+      background:#101836;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:12px 14px;
+    }
+    .stat span{
+      display:block;
+      color:var(--muted);
+      font-size:.78rem;
+      font-weight:900;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .stat strong{
+      font-size:1.3rem;
+      font-weight:900;
+    }
+
+    .health-shell{
+      background:#0b1430;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:5px;
+      margin-top:6px;
+    }
+    .healthbar{
+      height:20px;
+      width:100%;
+      background:#1b2852;
+      border-radius:4px;
+      position:relative;
+      overflow:hidden;
+    }
+    .health-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#53efb9,#91ffd8);
+      transition:width .2s ease;
+    }
+    .health-text{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      font-size:.74rem;
+      font-weight:900;
+      color:#04111a;
+    }
+    .health-ascii{
+      margin-top:8px;
+      color:var(--cyan);
+      font-size:.72rem;
+      font-weight:900;
+      letter-spacing:.05em;
+    }
+
+    .play-head{
+      padding:16px 18px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+    }
+    .play-head p{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:.94rem;
+    }
+    .status-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:8px;
+    }
+    .badge{
+      white-space:nowrap;
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:.82rem;
+      font-weight:900;
+      color:var(--cyan);
+    }
+    .best-mini{
+      color:var(--muted);
+      font-size:.78rem;
+      font-weight:900;
+    }
+
+    .game{
+      position:relative;
+      height:560px;
+      overflow:hidden;
+      border-radius:8px;
+      border:4px solid #2d4277;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.18)),
+        linear-gradient(180deg, #081121, #0d1830 60%, #132149 100%);
+      box-shadow:var(--shadow);
+      isolation:isolate;
+    }
+    .scanline{
+      position:absolute;
+      inset:0;
+      background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.03) 0 2px,
+        rgba(0,0,0,0) 2px 6px
+      );
+      opacity:.35;
+      pointer-events:none;
+    }
+    .netline{
+      position:absolute;
+      left:0; right:0;
+      height:4px;
+      background:linear-gradient(90deg,transparent,rgba(111,231,255,.38),transparent);
+      opacity:.7;
+    }
+    .net1{ top:25%; }
+    .net2{ top:50%; }
+    .net3{ top:75%; }
+
+    .hud{
+      position:absolute;
+      left:14px;
+      bottom:14px;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:10px 12px;
+    }
+    .hud .mini{
+      width:42px; height:42px;
+      display:grid; place-items:center;
+      border-radius:6px;
+      background:linear-gradient(180deg,#92f4ff,var(--cyan));
+      color:#07111f;
+      font-weight:900;
+    }
+    .hud small{
+      display:block;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .combo-box{
+      position:absolute;
+      top:14px;
+      right:14px;
+      z-index:3;
+      display:none;
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:.85rem;
+      font-weight:900;
+      color:var(--pink);
+      text-shadow:0 2px 0 rgba(0,0,0,.18);
+    }
+
+    .soc-toast{
+      position:absolute;
+      top:14px;
+      left:14px;
+      z-index:3;
+      display:none;
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:10px 12px;
+      font-size:.78rem;
+      max-width:280px;
+      color:var(--text);
+    }
+    .soc-toast strong{
+      display:block;
+      color:var(--cyan);
+      margin-bottom:4px;
+    }
+
+    .entity{
+      position:absolute;
+      width:72px;
+      height:72px;
+      border-radius:8px;
+      border:3px solid rgba(255,255,255,.18);
+      display:grid;
+      place-items:center;
+      font-size:2rem;
+      cursor:pointer;
+      user-select:none;
+      box-shadow:0 8px 0 rgba(0,0,0,.2);
+      z-index:3;
+    }
+    .threat{ background:linear-gradient(180deg,#ff97b0,var(--danger)); }
+    .legit{ background:linear-gradient(180deg,#ffe59f,var(--warn)); color:#5f4300; }
+    .bonus{ background:linear-gradient(180deg,#9dffdc,var(--ok)); color:#053323; }
+    .soc{ background:linear-gradient(180deg,#b7abff,var(--violet)); color:#0f1631; }
+
+    .explosion-pixel{
+      position:absolute;
+      width:8px;
+      height:8px;
+      background:var(--cyan);
+      z-index:6;
+      pointer-events:none;
+      image-rendering:pixelated;
+    }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:rgba(5,8,18,.55);
+      z-index:7;
+    }
+    .overlay.hidden{ display:none; }
+    .overlay-box{
+      max-width:560px;
+      background:linear-gradient(180deg,#172247,#121b39);
+      border:4px solid #3a5290;
+      border-radius:8px;
+      box-shadow:var(--shadow);
+      padding:24px;
+      text-align:center;
+    }
+    .overlay-box p{
+      color:var(--muted);
+      line-height:1.6;
+      margin-top:10px;
+    }
+    .tip{
+      color:var(--text)!important;
+      font-weight:900;
+    }
+    .overlay-actions{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .ranking-card,.threat-card,.soc-card,.world-card{ padding:16px; }
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .small-badge{
+      background:#0f1833;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:8px 10px;
+      font-size:.72rem;
+      font-weight:900;
+      color:var(--cyan);
+    }
+
+    .ranking-list,.threat-list,.soc-list,.world-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .ranking-item,.threat-item,.soc-item,.world-item{
+      background:#101836;
+      border:3px solid #30447d;
+      border-radius:8px;
+      padding:10px 12px;
+      font-weight:900;
+    }
+
+    .ranking-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .ranking-item small,
+    .soc-item small,
+    .world-item small,
+    .threat-item small{
+      display:block;
+      color:var(--muted);
+      font-size:.76rem;
+      font-weight:900;
+      margin-top:4px;
+    }
+
+    .threat-item{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    .soc-item{ border-left:8px solid var(--violet); }
+    .world-item{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .world-bar{
+      height:10px;
+      width:120px;
+      background:#1b2852;
+      border-radius:4px;
+      overflow:hidden;
+      border:2px solid #30447d;
+    }
+    .world-bar span{
+      display:block;
+      height:100%;
+      background:linear-gradient(90deg,var(--pink),var(--violet));
+      width:0%;
+      transition:width .2s ease;
+    }
+
+    footer{
+      margin-top:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:900;
+    }
+
+    @media (max-width: 1050px){
+      .hero,.main{ grid-template-columns:1fr; }
+      .stats{ grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width: 620px){
+      body{ padding:12px; }
+      .buttons{ flex-direction:column; }
+      .game{ height:480px; }
+      .entity{ width:62px; height:62px; font-size:1.7rem; }
+      .pixel-sprite{ width:148px; height:148px; }
+      .status-wrap{ align-items:flex-start; }
+      .play-head{ flex-direction:column; align-items:flex-start; }
+      .stats{ grid-template-columns:1fr 1fr; }
+      .world-bar{ width:100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="card intro">
+        <div class="eyebrow">GitHub Pages • arquivo único</div>
+        <h1>Cyber Guardian</h1>
+        <p>
+          Proteja a rede contra ameaças digitais, preserve o tráfego legítimo
+          e mantenha a integridade do ambiente até o fim da missão.
+        </p>
+
+        <div class="legend">
+          <div class="pill"><span class="dot danger"></span> ameaças com níveis</div>
+          <div class="pill"><span class="dot warn"></span> tráfego legítimo</div>
+          <div class="pill"><span class="dot ok"></span> bônus</div>
+          <div class="pill"><span class="dot violet"></span> eventos SOC</div>
+        </div>
+
+        <div class="name-box">
+          <label for="playerName">Nome do jogador</label>
+          <input id="playerName" type="text" maxlength="18" placeholder="Digite seu nome" />
+        </div>
+
+        <div class="buttons">
+          <button class="btn-primary" id="startBtn" type="button">Iniciar missão</button>
+          <button class="btn-secondary" id="restartBtn" type="button">Reiniciar</button>
+        </div>
+
+        <div class="legend" style="margin-top:14px">
+          <div class="pill">🔥 combo aumenta pontuação</div>
+          <div class="pill">🏆 ranking salvo no navegador</div>
+          <div class="pill">💥 explosão pixel</div>
+        </div>
+      </div>
+
+      <div class="card avatar-card">
+        <div class="pixel-stage">
+          <svg class="pixel-sprite" viewBox="0 0 16 16" aria-label="Avatar pixel hacker">
+            <rect width="16" height="16" fill="transparent"/>
+            <rect x="4" y="1" width="8" height="1" fill="#24182f"/>
+            <rect x="3" y="2" width="10" height="2" fill="#24182f"/>
+            <rect x="2" y="4" width="1" height="2" fill="#24182f"/>
+            <rect x="13" y="4" width="1" height="2" fill="#24182f"/>
+            <rect x="3" y="4" width="10" height="6" fill="#f1c4a8"/>
+            <rect x="5" y="6" width="1" height="1" fill="#6fe7ff"/>
+            <rect x="10" y="6" width="1" height="1" fill="#6fe7ff"/>
+            <rect x="7" y="8" width="2" height="1" fill="#a85b73"/>
+            <rect x="3" y="10" width="10" height="3" fill="#0f1a32"/>
+            <rect x="2" y="11" width="12" height="3" fill="#132044"/>
+            <rect x="1" y="14" width="14" height="1" fill="#09111f"/>
+            <rect x="4" y="11" width="8" height="3" fill="#0a1325"/>
+            <rect x="5" y="12" width="6" height="1" fill="#6fe7ff"/>
+            <rect x="1" y="2" width="1" height="1" fill="#8f82ff"/>
+            <rect x="14" y="3" width="1" height="1" fill="#ff73c4"/>
+            <rect x="1" y="9" width="1" height="1" fill="#6fe7ff"/>
+          </svg>
+          <div class="tag">Avatar pixel hacker</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="main">
+      <div class="left-col">
+        <div class="card stats">
+          <div class="stat"><span>Pontuação</span><strong id="score">0</strong></div>
+          <div class="stat"><span>Nível</span><strong id="level">1</strong></div>
+          <div class="stat"><span>Tempo</span><strong id="time">30s</strong></div>
+          <div class="stat"><span>Combo</span><strong id="comboStat">x1</strong></div>
+          <div class="stat">
+            <span>Integridade</span>
+            <div class="health-shell">
+              <div class="healthbar">
+                <div class="health-fill" id="healthFill"></div>
+                <div class="health-text" id="healthText">100%</div>
+              </div>
+            </div>
+            <div class="health-ascii" id="healthAscii">██████████ 100%</div>
+          </div>
+        </div>
+
+        <div class="card play-head">
+          <div>
+            <h3>Centro de Defesa</h3>
+            <p>Clique nas ameaças antes que atravessem a rede.</p>
+          </div>
+          <div class="status-wrap">
+            <div class="badge" id="statusBadge">Aguardando missão</div>
+            <div class="best-mini" id="bestMini">Melhor pontuação: 0</div>
+          </div>
+        </div>
+
+        <div class="game" id="game">
+          <div class="scanline"></div>
+          <div class="netline net1"></div>
+          <div class="netline net2"></div>
+          <div class="netline net3"></div>
+
+          <div class="soc-toast" id="socToast"></div>
+          <div class="combo-box" id="comboBox">COMBO x2</div>
+
+          <div class="hud">
+            <div class="mini">PX</div>
+            <div><strong>Modo pixel online</strong><small>Blue Team ativo</small></div>
+          </div>
+
+          <div class="overlay" id="overlay">
+            <div class="overlay-box" id="overlayBox">
+              <h2>Cyber Guardian</h2>
+              <p>Proteja a rede por 30 segundos e marque o máximo de pontos possível.</p>
+              <p class="tip">Ameaças somam pontos. Tráfego legítimo tira pontos. Bônus recupera integridade.</p>
+              <div class="overlay-actions">
+                <button class="btn-primary" id="overlayStartBtn" type="button">Começar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-stack">
+        <div class="card ranking-card">
+          <div class="panel-head">
+            <h3>TOP DEFENDERS</h3>
+            <div class="small-badge" id="bestBadge">Melhor: 0</div>
+          </div>
+          <div class="ranking-list" id="rankingList"></div>
+        </div>
+
+        <div class="card threat-card">
+          <div class="panel-head">
+            <h3>Tipos de ameaça</h3>
+            <div class="small-badge">níveis</div>
+          </div>
+          <div class="threat-list" id="threatList"></div>
+        </div>
+
+        <div class="card soc-card">
+          <div class="panel-head">
+            <h3>Modo SOC</h3>
+            <div class="small-badge">ao vivo</div>
+          </div>
+          <div class="soc-list" id="socList"></div>
+        </div>
+
+        <div class="card world-card">
+          <div class="panel-head">
+            <h3>Mapa de ataque</h3>
+            <div class="small-badge">origens</div>
+          </div>
+          <div class="world-list" id="worldList"></div>
+        </div>
+      </aside>
+    </section>
+
+    <footer>Be Safe • Mariana BS</footer>
+  </div>
+
+  <script>
+    (() => {
+      const game = document.getElementById('game');
+      const scoreEl = document.getElementById('score');
+      const levelEl = document.getElementById('level');
+      const timeEl = document.getElementById('time');
+      const comboStatEl = document.getElementById('comboStat');
+      const healthFill = document.getElementById('healthFill');
+      const healthText = document.getElementById('healthText');
+      const healthAscii = document.getElementById('healthAscii');
+      const statusBadge = document.getElementById('statusBadge');
+      const bestMini = document.getElementById('bestMini');
+      const bestBadge = document.getElementById('bestBadge');
+      const rankingList = document.getElementById('rankingList');
+      const threatList = document.getElementById('threatList');
+      const socList = document.getElementById('socList');
+      const worldList = document.getElementById('worldList');
+      const overlay = document.getElementById('overlay');
+      const overlayBox = document.getElementById('overlayBox');
+      const startBtn = document.getElementById('startBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const overlayStartBtn = document.getElementById('overlayStartBtn');
+      const comboBox = document.getElementById('comboBox');
+      const socToast = document.getElementById('socToast');
+      const playerNameInput = document.getElementById('playerName');
+
+      const RANKING_KEY = 'cyber_guardian_top_defenders_v4';
+      const PLAYER_KEY = 'cyber_guardian_player_name_v4';
+
+      const THREAT_TYPES = [
+        {emoji:'🐞', name:'Bug', points:10, damage:8, speed:0.0, country:'EUA'},
+        {emoji:'🦠', name:'Malware', points:15, damage:12, speed:0.25, country:'China'},
+        {emoji:'👾', name:'Botnet', points:20, damage:16, speed:0.55, country:'Rússia'},
+        {emoji:'💣', name:'Ransomware', points:30, damage:22, speed:0.95, country:'EUA'}
+      ];
+
+      const SOC_TYPES = [
+        {emoji:'🔐', name:'Brute Force', points:16, damage:12, speed:0.35, country:'Rússia'},
+        {emoji:'🦠', name:'Malware', points:18, damage:14, speed:0.45, country:'China'},
+        {emoji:'📤', name:'Data Exfiltration', points:22, damage:18, speed:0.6, country:'EUA'},
+        {emoji:'📧', name:'Phishing', points:14, damage:10, speed:0.3, country:'China'}
+      ];
+
+      const LEGIT = ['📄','☁️','📦','✅'];
+      const BONUS = ['🛡️','⚡','🔐'];
+
+      const WORLD_TEMPLATE = {
+        'Rússia': 0,
+        'China': 0,
+        'EUA': 0
+      };
+
+      let state = null;
+      let spawnTimer = null;
+      let clockTimer = null;
+      let toastTimer = null;
+      let comboDecayTimer = null;
+      let entityCounter = 0;
+      let playerName = 'Defender';
+
+      function sanitizeName(name){
+        return (name || '')
+          .trim()
+          .replace(/[<>]/g, '')
+          .slice(0, 18) || 'Defender';
+      }
+
+      function loadPlayerName(){
+        const saved = localStorage.getItem(PLAYER_KEY);
+        if(saved){
+          playerName = sanitizeName(saved);
+          playerNameInput.value = playerName;
+        }
+      }
+
+      function persistPlayerName(){
+        const value = sanitizeName(playerNameInput.value);
+        playerName = value;
+        playerNameInput.value = value;
+        localStorage.setItem(PLAYER_KEY, value);
+      }
+
+      function readRanking(){
+        try{
+          const data = JSON.parse(localStorage.getItem(RANKING_KEY) || '[]');
+          return Array.isArray(data) ? data : [];
+        }catch(e){
+          return [];
+        }
+      }
+
+      function writeRanking(name, score){
+        const data = readRanking();
+        data.push({name, score});
+        data.sort((a,b) => b.score - a.score);
+        localStorage.setItem(RANKING_KEY, JSON.stringify(data.slice(0,5)));
+      }
+
+      function renderRanking(){
+        const data = readRanking();
+        rankingList.innerHTML = '';
+
+        if(!data.length){
+          rankingList.innerHTML = '<div class="ranking-item"><span>Nenhuma pontuação ainda</span><strong>—</strong></div>';
+          bestMini.textContent = 'Melhor pontuação: 0';
+          bestBadge.textContent = 'Melhor: 0';
+          return;
+        }
+
+        bestMini.textContent = 'Melhor pontuação: ' + data[0].score;
+        bestBadge.textContent = 'Melhor: ' + data[0].score;
+
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'ranking-item';
+          const medal = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][idx] || '#';
+          row.innerHTML = '<span>' + medal + ' ' + item.name + '</span><strong>' + item.score + '</strong>';
+          rankingList.appendChild(row);
+        });
+      }
+
+      function renderThreatTable(){
+        threatList.innerHTML = '';
+        THREAT_TYPES.forEach(t => {
+          const row = document.createElement('div');
+          row.className = 'threat-item';
+          row.innerHTML = '<div><div>' + t.emoji + ' ' + t.name + '</div><small>+' + t.points + ' pontos • mais rápido</small></div><strong>-' + t.damage + '%</strong>';
+          threatList.appendChild(row);
+        });
+      }
+
+      function renderSOCPanel(){
+        socList.innerHTML = '';
+        state.socFeed.slice(0,4).forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'soc-item';
+          row.innerHTML = '<div>ALERT ' + item.id + ' • ' + item.title + '</div><small>SOURCE: ' + item.source + '</small>';
+          socList.appendChild(row);
+        });
+      }
+
+      function renderWorldMap(){
+        worldList.innerHTML = '';
+        ['Rússia','China','EUA'].forEach(country => {
+          const count = state.world[country];
+          const pct = Math.min(100, count * 10);
+          const row = document.createElement('div');
+          row.className = 'world-item';
+          row.innerHTML = '<div>🌎 ' + country + '<small>' + count + ' eventos</small></div><div class="world-bar"><span style="width:' + pct + '%"></span></div>';
+          worldList.appendChild(row);
+        });
+      }
+
+      function createAsciiHealth(value){
+        const total = 10;
+        const filled = Math.max(0, Math.min(total, Math.round((value / 100) * total)));
+        return '█'.repeat(filled) + '░'.repeat(total - filled) + ' ' + Math.max(0, value) + '%';
+      }
+
+      function updateUI(){
+        scoreEl.textContent = String(state.score);
+        levelEl.textContent = String(state.level);
+        timeEl.textContent = state.time + 's';
+        comboStatEl.textContent = 'x' + state.combo;
+        healthFill.style.width = Math.max(0, state.health) + '%';
+        healthText.textContent = Math.max(0, state.health) + '%';
+        healthAscii.textContent = createAsciiHealth(state.health);
+
+        if(state.combo > 1){
+          comboBox.style.display = 'block';
+          comboBox.textContent = 'COMBO x' + state.combo;
+        } else {
+          comboBox.style.display = 'none';
+        }
+
+        renderSOCPanel();
+        renderWorldMap();
+      }
+
+      function addSOCEvent(title, source){
+        const id = 1000 + Math.floor(Math.random() * 9000);
+        state.socFeed.unshift({id, title, source});
+        state.socFeed = state.socFeed.slice(0,8);
+      }
+
+      function randomIP(){
+        return [
+          10 + Math.floor(Math.random() * 220),
+          1 + Math.floor(Math.random() * 254),
+          1 + Math.floor(Math.random() * 254),
+          1 + Math.floor(Math.random() * 254)
+        ].join('.');
+      }
+
+      function showToast(title, detail){
+        socToast.innerHTML = '<strong>' + title + '</strong>' + detail;
+        socToast.style.display = 'block';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          socToast.style.display = 'none';
+        }, 1200);
+      }
+
+      function beep(type){
+        try{
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          const ctx = new Ctx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          gain.gain.value = 0.03;
+
+          if(type === 'pew'){ osc.frequency.value = 420; }
+          else if(type === 'alert'){ osc.frequency.value = 180; }
+          else { osc.frequency.value = 660; }
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.06);
+        }catch(e){}
+      }
+
+      function pixelExplosion(x, y, color){
+        const particles = 8;
+        for(let i=0; i<particles; i++){
+          const p = document.createElement('div');
+          p.className = 'explosion-pixel';
+          p.style.left = x + 'px';
+          p.style.top = y + 'px';
+          p.style.background = color;
+          game.appendChild(p);
+
+          const dx = (Math.random() * 50) - 25;
+          const dy = (Math.random() * 50) - 25;
+          let step = 0;
+
+          function animate(){
+            step += 1;
+            p.style.transform = 'translate(' + (dx * (step / 14)) + 'px,' + (dy * (step / 14)) + 'px)';
+            p.style.opacity = String(1 - step / 14);
+            if(step < 14){
+              requestAnimationFrame(animate);
+            }else{
+              p.remove();
+            }
+          }
+          requestAnimationFrame(animate);
+        }
+      }
+
+      function clearEntities(){
+        document.querySelectorAll('.entity, .explosion-pixel').forEach(el => el.remove());
+      }
+
+      function clearTimers(){
+        clearInterval(spawnTimer);
+        clearInterval(clockTimer);
+        clearTimeout(toastTimer);
+        clearTimeout(comboDecayTimer);
+      }
+
+      function resetState(){
+        clearTimers();
+        clearEntities();
+        entityCounter = 0;
+        state = {
+          running:false,
+          score:0,
+          level:1,
+          time:30,
+          combo:1,
+          streak:0,
+          health:100,
+          socFeed:[
+            {id:1042, title:'BRUTE FORCE DETECTED', source:'185.22.19.4'},
+            {id:2210, title:'MALWARE DETECTED', source:'45.88.120.7'},
+            {id:3398, title:'PHISHING DETECTED', source:'203.10.77.61'}
+          ],
+          world: JSON.parse(JSON.stringify(WORLD_TEMPLATE))
+        };
+
+        statusBadge.textContent = 'Aguardando missão';
+        overlay.classList.remove('hidden');
+        overlayBox.innerHTML = `
+          <h2>Cyber Guardian</h2>
+          <p>Proteja a rede por 30 segundos e marque o máximo de pontos possível.</p>
+          <p class="tip">Ameaças somam pontos. Tráfego legítimo tira pontos. Bônus recupera integridade.</p>
+          <div class="overlay-actions">
+            <button class="btn-primary" id="overlayStartBtnInner" type="button">Começar</button>
+          </div>
+        `;
+        document.getElementById('overlayStartBtnInner').addEventListener('click', startGame);
+        updateUI();
+      }
+
+      function resetComboSoon(){
+        clearTimeout(comboDecayTimer);
+        comboDecayTimer = setTimeout(() => {
+          state.streak = 0;
+          state.combo = 1;
+          updateUI();
+        }, 2200);
+      }
+
+      function restartSpawnLoop(){
+        clearInterval(spawnTimer);
+        const interval = Math.max(300, 900 - ((state.level - 1) * 70));
+        spawnTimer = setInterval(spawnEntity, interval);
+      }
+
+      function updateLevel(){
+        const nextLevel = Math.min(8, Math.floor(state.score / 140) + 1);
+        if(nextLevel !== state.level){
+          state.level = nextLevel;
+          restartSpawnLoop();
+        }
+      }
+
+      function finishGame(victory){
+        state.running = false;
+        clearTimers();
+        clearEntities();
+        writeRanking(playerName, state.score);
+        renderRanking();
+
+        statusBadge.textContent = victory ? 'Missão concluída' : 'Rede comprometida';
+        overlay.classList.remove('hidden');
+        if(victory){
+          overlayBox.innerHTML = `
+            <h2>Missão concluída</h2>
+            <p>${playerName}, você segurou a rede até o fim da rodada.</p>
+            <p class="tip">Pontuação final: ${state.score} • Integridade final: ${Math.max(0, state.health)}%</p>
+            <div class="overlay-actions">
+              <button class="btn-primary" id="playAgainBtn" type="button">Jogar novamente</button>
+            </div>
+          `;
+        }else{
+          overlayBox.innerHTML = `
+            <h2>Rede comprometida</h2>
+            <p>${playerName}, as ameaças passaram da defesa. Reinicie a operação.</p>
+            <p class="tip">Pontuação final: ${state.score}</p>
+            <div class="overlay-actions">
+              <button class="btn-primary" id="playAgainBtn" type="button">Tentar novamente</button>
+            </div>
+          `;
+        }
+        document.getElementById('playAgainBtn').addEventListener('click', startGame);
+      }
+
+      function tick(){
+        if(!state.running) return;
+        state.time -= 1;
+        updateUI();
+        if(state.time <= 0){
+          finishGame(state.health > 0);
+        }
+      }
+
+      function spawnEntity(){
+        if(!state.running) return;
+
+        let type = null;
+        let payload = null;
+        const roll = Math.random();
+
+        if(roll < 0.55){
+          type = 'threat';
+          payload = THREAT_TYPES[Math.floor(Math.random() * THREAT_TYPES.length)];
+        }else if(roll < 0.77){
+          type = 'legit';
+          payload = {emoji: LEGIT[Math.floor(Math.random() * LEGIT.length)], name:'Legítimo', points:-8, damage:0};
+        }else if(roll < 0.9){
+          type = 'bonus';
+          payload = {emoji: BONUS[Math.floor(Math.random() * BONUS.length)], name:'Bônus', points:6, damage:-12};
+        }else{
+          type = 'soc';
+          payload = SOC_TYPES[Math.floor(Math.random() * SOC_TYPES.length)];
+        }
+
+        const entity = document.createElement('button');
+        entity.type = 'button';
+        entity.className = 'entity ' + type;
+        entity.dataset.id = 'e-' + (++entityCounter);
+        entity.textContent = payload.emoji;
+
+        const size = window.innerWidth < 620 ? 62 : 72;
+        let x = -size;
+        let y = Math.random() * Math.max(10, game.clientHeight - size - 24);
+
+        entity.style.left = x + 'px';
+        entity.style.top = y + 'px';
+        game.appendChild(entity);
+
+        const baseSpeed = 1.65 + (state.level * 0.36);
+        const speed = baseSpeed + (payload.speed || 0);
+
+        let removed = false;
+
+        entity.addEventListener('click', function(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+          if(!state.running || removed) return;
+          removed = true;
+
+          const rect = entity.getBoundingClientRect();
+          const gameRect = game.getBoundingClientRect();
+          const ex = rect.left - gameRect.left + rect.width / 2;
+          const ey = rect.top - gameRect.top + rect.height / 2;
+
+          if(type === 'threat'){
+            state.streak += 1;
+            state.combo = Math.min(9, state.streak);
+            const gained = payload.points * state.combo;
+            state.score += gained;
+            state.world[payload.country] += 1;
+            addSOCEvent(payload.name.toUpperCase() + ' BLOCKED', randomIP());
+            showToast(payload.name.toUpperCase(), 'Pontuação +' + gained);
+            beep('pew');
+            pixelExplosion(ex, ey, 'var(--danger)');
+            resetComboSoon();
+          }else if(type === 'soc'){
+            state.streak += 1;
+            state.combo = Math.min(9, state.streak);
+            const gained = payload.points * state.combo;
+            state.score += gained;
+            state.world[payload.country] += 1;
+            addSOCEvent(payload.name.toUpperCase() + ' DETECTED', randomIP());
+            showToast('ALERT ' + payload.name.toUpperCase(), 'Pontuação +' + gained);
+            beep('pew');
+            pixelExplosion(ex, ey, 'var(--violet)');
+            resetComboSoon();
+          }else if(type === 'legit'){
+            state.score = Math.max(0, state.score + payload.points);
+            state.streak = 0;
+            state.combo = 1;
+            addSOCEvent('FALSE POSITIVE', randomIP());
+            showToast('FALSO POSITIVO', 'Tráfego legítimo bloqueado');
+            beep('alert');
+            pixelExplosion(ex, ey, 'var(--warn)');
+          }else{
+            state.health = Math.min(100, state.health - payload.damage);
+            state.score += payload.points;
+            addSOCEvent('BONUS COLLECTED', randomIP());
+            showToast('BÔNUS', '+12% de integridade');
+            beep('bonus');
+            pixelExplosion(ex, ey, 'var(--ok)');
+          }
+
+          entity.remove();
+          updateLevel();
+          updateUI();
+        });
+
+        function step(){
+          if(!state.running || removed) return;
+          x += speed;
+          entity.style.left = x + 'px';
+
+          if(x > game.clientWidth + 10){
+            removed = true;
+            entity.remove();
+
+            if(type === 'threat' || type === 'soc'){
+              state.health -= payload.damage;
+              state.streak = 0;
+              state.combo = 1;
+              state.world[payload.country] += 1;
+              addSOCEvent(payload.name.toUpperCase() + ' PASSED', randomIP());
+              showToast('INCIDENTE', payload.name + ' passou pela defesa');
+              beep('alert');
+              if(state.health <= 0){
+                updateUI();
+                finishGame(false);
+                return;
+              }
+            }
+            updateUI();
+            return;
+          }
+          requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      function startGame(){
+        persistPlayerName();
+        resetState();
+        state.running = true;
+        overlay.classList.add('hidden');
+        statusBadge.textContent = 'Missão em andamento';
+        updateUI();
+        restartSpawnLoop();
+        clockTimer = setInterval(tick, 1000);
+      }
+
+      loadPlayerName();
+      renderRanking();
+      renderThreatTable();
+      resetState();
+
+      startBtn.addEventListener('click', startGame);
+      restartBtn.addEventListener('click', startGame);
+      overlayStartBtn.addEventListener('click', startGame);
+      playerNameInput.addEventListener('change', persistPlayerName);
+    })();
+  </script>
+</body>
+</html>
